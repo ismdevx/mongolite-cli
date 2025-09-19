@@ -1,6 +1,34 @@
 # 🍃 Mongolite CLI
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensourc**Example with special characters in password:**
+```bash
+mongocli setup admin admin "myP@ssw0rd#123!" root
+```
+
+**Test your VPS connection:**
+```bash
+# Test connection to your VPS MongoDB
+mongocli connection --host your-vps-ip --port 27017 --user admin
+```
+
+## 🎯 Common Usage Examples
+
+```bash
+# Complete setup workflow
+mongocli setup myapp app_user "secure_pass123" readWrite
+mongocli list-db
+mongocli list-users myapp
+
+# Data backup and restore
+mongocli dump db production ./backup/
+mongocli import db development ./backup/production --drop
+
+# User management
+mongocli create-user reporting report_user "report_pass" read
+mongocli set-roles reporting report_user read,dbAdmin
+```
+
+## 📚 Available Commands# 📚 Available Commandslicenses/MIT)
 
 A powerful and user-friendly CLI tool for managing MongoDB databases, users, collections, and data import/export operations with beautiful colorful output and comprehensive features.
 
@@ -85,7 +113,33 @@ mongocli list-db
 mongocli help
 ```
 
-## 📚 Available Commands
+## �️ VPS Setup
+
+For VPS/Remote MongoDB server initial setup, create a root admin user with full permissions:
+
+```bash
+# Create root admin user with full cluster access
+mongocli setup admin admin "your_secure_password" root
+
+# Alternative: Use cluster admin role for full permissions
+mongocli setup admin admin "your_secure_password" clusterAdmin
+
+# Verify the admin user was created
+mongocli list-users admin
+```
+
+**Recommended VPS Admin Roles:**
+- `root` - MongoDB superuser with all privileges
+- `clusterAdmin` - Full cluster administration access
+- `userAdminAnyDatabase` - Manage users across all databases
+- `dbAdminAnyDatabase` - Database administration across all databases
+
+**Example with special characters in password:**
+```bash
+mongocli setup admin admin "myP@ssw0rd#123!" root
+```
+
+## �📚 Available Commands
 
 ### Database Operations
 ```bash
@@ -145,6 +199,21 @@ mongocli import db <dbName> <dir> [--drop] [--upsert]
 
 # Import all databases
 mongocli import all <rootDir> [--drop] [--upsert]
+```
+
+### Utility Commands
+```bash
+# Test database connection
+mongocli connection --host <hostname> --port <port> --user <username>
+
+# Check if database exists
+mongocli db-exists <dbName>
+
+# Authenticate user
+mongocli auth-user <dbName> <username> <password>
+
+# Switch to a database (shows connection info)
+mongocli use-db <dbName>
 ```
 
 ### Help
@@ -208,39 +277,6 @@ You can specify user roles using standard MongoDB role names:
 - `clusterManager` - Manage cluster
 - `clusterAdmin` - Full cluster access
 
-## 🚀 Usage Examples
-
-### Basic Setup
-```bash
-# Create a new application database with a user
-mongocli setup myapp app_user secure_password123 readWrite
-
-# List what we created
-mongocli list-db
-mongocli list-users myapp
-```
-
-### Data Migration
-```bash
-# Dump production database
-mongocli dump db production_db ./backups/
-
-# Import to development
-mongocli import db development_db ./backups/production_db --drop
-```
-
-### User Management
-```bash
-# Create admin user
-mongocli create-user myapp admin_user admin_pass123 dbAdmin
-
-# Create read-only user for reporting
-mongocli create-user myapp report_user report_pass123 read
-
-# Update user roles
-mongocli set-roles myapp report_user read,dbAdmin
-```
-
 ## 🔒 Security Considerations
 
 1. **Environment Variables**: Store sensitive credentials in `.env` files, never commit them to version control
@@ -257,6 +293,18 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 3. Commit your changes (`git commit -m 'Add some amazing feature'`)
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
+
+## ⭐ Support
+
+If you find this project helpful, please consider giving it a star on GitHub! ⭐
+
+Your support helps:
+- 🚀 **Motivate development** of new features
+- 📈 **Increase project visibility** for other developers
+- 🎯 **Prioritize improvements** based on community interest
+- 💝 **Show appreciation** for the time and effort invested
+
+[**⭐ Star this project on GitHub**](https://github.com/ismdevx/mongolite-cli) 
 
 ## 📄 License
 
