@@ -232,34 +232,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 If you encounter any issues or have feature requests, please [create an issue](https://github.com/ismdevx/mongolite-cli/issues) on GitHub.
 
-## 🚀 Publishing to NPM
-
-When ready to publish this package to npm:
-
-1. Update the repository URL in `package.json`
-2. Ensure you have an npm account
-3. Run the following commands:
-
-```bash
-npm login
-npm publish
-```
-
-After publishing, users will be able to install globally with:
-```bash
-npm install -g mongolite-cli
-```
-
-## 📊 Changelog
-
-### v1.0.0
-- Initial release
-- Full database management capabilities
-- User management with role-based access
-- Data import/export functionality
-- Colorful CLI interface
-- Environment configuration support
-
 ## 💡 Role Codes (Alternative Usage)
 
 You can pass roles by name or by code:
