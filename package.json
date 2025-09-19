@@ -22,6 +22,7 @@
     "create-user": "node mongodb.js create-user",
     "delete-user": "node mongodb.js delete-user",
     "list-users": "node mongodb.js list-users",
+    "all-users": "node mongodb.js all users",
     "list-collections": "node mongodb.js list-collections",
     "delete-collection": "node mongodb.js delete-collection",
     "dump": "node mongodb.js dump",
