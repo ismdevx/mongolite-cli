@@ -53,6 +53,9 @@ function usage() {
 			colors.white("  mongocli ") + colors.blue("-h"),
 			colors.white("  mongocli ") + colors.blue("--help"),
 			"",
+			colors.green.bold("Utilities:"),
+			colors.white("  mongocli ") + colors.blue("connection") + colors.gray(" <dbName> [--host <ip>] [--port <port>]"),
+			"",
 			colors.yellow.bold("Environment Variables (optional):"),
 			colors.cyan("  DB_HOST") + colors.gray(" (default: localhost)"),
 			colors.cyan("  DB_PORT") + colors.gray(" (default: 27017)"),
@@ -77,6 +80,16 @@ function getAdminUri() {
 
 	// No credentials provided; connect without auth (e.g., local dev without security).
 	return `mongodb://${host}:${port}/`;
+}
+
+function buildConnectionUri({ dbName, user, host, port, maskPassword } = {}) {
+	const Host = host || process.env.DB_HOST || "localhost";
+	const Port = port || process.env.DB_PORT || "27017";
+	
+	const cred = user ? `${encodeURIComponent(user)}:${maskPassword ? "<:password:>" : ""}@` : "";
+	const dbSuffix = dbName ? `/${encodeURIComponent(dbName)}` : "/";
+
+	return `mongodb://${cred}${Host}:${Port}${dbSuffix}`;
 }
 
 async function withClient(cb) {
@@ -284,6 +297,54 @@ async function main() {
 								console.log(res.dropped ? `Database '${dbName}' dropped.` : `Database '${dbName}' was not dropped.`);
 								break;
 							}
+			case "connection": {
+				const [dbName, ...rest] = args;
+				if (!dbName) throw new Error("dbName is required");
+				
+				// Parse only --host and --port flags
+				const flags = {};
+				for (let i = 0; i < rest.length; i++) {
+					const arg = rest[i];
+					if (arg === "--host" && rest[i + 1]) {
+						flags.host = rest[i + 1];
+						i++;
+					} else if (arg === "--port" && rest[i + 1]) {
+						flags.port = rest[i + 1];
+						i++;
+					}
+				}
+				
+				// Auto-detect a DB user
+				let user = null;
+				try {
+					const users = await withClient(async (client) => {
+						const cmdRes = await client.db(dbName).command({ usersInfo: 1 });
+						return (cmdRes && cmdRes.users) || [];
+					});
+					
+					// Prefer dbOwner, then readWrite, then first
+					const score = (u) => {
+						const roles = (u.roles || []).map((r) => r.role || "");
+						if (roles.includes("dbOwner")) return 3;
+						if (roles.includes("readWrite")) return 2;
+						return 1;
+					};
+					users.sort((a, b) => score(b) - score(a));
+					if (users.length) user = users[0].user;
+				} catch (_) {
+					// Ignore errors and fall back to default behavior
+				}
+				
+				const uri = buildConnectionUri({
+					dbName,
+					user,
+					host: flags.host,
+					port: flags.port,
+					maskPassword: true,
+				});
+				console.log(uri);
+				break;
+			}
 			case "help":
 			case "-h":
 			case "--help":
