@@ -1,0 +1,73 @@
+{
+  "name": "mongolite-cli",
+  "version": "1.0.0",
+  "description": "A powerful and user-friendly CLI tool for managing MongoDB databases, users, collections, and data import/export operations with colorful output and comprehensive features.",
+  "main": "mongodb.js",
+  "bin": {
+    "mongocli": "./mongodb.js",
+    "mongolite": "./mongodb.js",
+    "mongolite-cli": "./mongodb.js"
+  },
+  "dependencies": {
+    "colors": "^1.4.0",
+    "dotenv": "^16.4.5",
+    "mongodb": "^6.19.0"
+  },
+  "scripts": {
+    "help": "node mongodb.js help",
+    "setup": "node mongodb.js setup",
+    "create-db": "node mongodb.js create-db",
+    "delete-db": "node mongodb.js delete-db",
+    "list-db": "node mongodb.js list-db",
+    "create-user": "node mongodb.js create-user",
+    "delete-user": "node mongodb.js delete-user",
+    "list-users": "node mongodb.js list-users",
+    "list-collections": "node mongodb.js list-collections",
+    "delete-collection": "node mongodb.js delete-collection",
+    "dump": "node mongodb.js dump",
+    "import": "node mongodb.js import",
+    "change-password": "node mongodb.js change-password",
+    "set-roles": "node mongodb.js set-roles",
+    "connection": "node Functions/connection.js",
+    "start": "node mongodb.js help",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "mongodb",
+    "cli",
+    "database",
+    "mongo",
+    "db",
+    "database-management",
+    "mongodb-cli",
+    "mongodb-tools",
+    "database-tools",
+    "dump",
+    "import",
+    "export",
+    "user-management",
+    "collection-management"
+  ],
+  "author": {
+    "name": "ismdevx",
+    "email": "your-email@example.com"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ismdevx/mongolite-cli.git"
+  },
+  "homepage": "https://github.com/ismdevx/mongolite-cli#readme",
+  "bugs": {
+    "url": "https://github.com/ismdevx/mongolite-cli/issues"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "files": [
+    "mongodb.js",
+    "Functions/",
+    ".env.example",
+    "README.md"
+  ]
+}
