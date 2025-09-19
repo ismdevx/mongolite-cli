@@ -1,47 +1,34 @@
 # 🍃 Mongolite CLI
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensourc**Example with special characters in password:**
-```bash
-mongocli setup admin admin "myP@ssw0rd#123!" root
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](httmongocli help
 ```
 
-**Test your VPS connection:**
-```bash
-# Test connection to your VPS MongoDB
-mongocli connection --host your-vps-ip --port 27017 --user admin
-```
+## 🖥️ VPS Setup
 
-## 🎯 Common Usage Examples
-
-```bash
-# Complete setup workflow
-mongocli setup myapp app_user "secure_pass123" readWrite
-mongocli list-db
-mongocli list-users myapp
-
-# Data backup and restore
-mongocli dump db production ./backup/
-mongocli import db development ./backup/production --drop
-
-# User management
-mongocli create-user reporting report_user "report_pass" read
-mongocli set-roles reporting report_user read,dbAdmin
-```
-
-## 📚 Available Commands# 📚 Available Commandslicenses/MIT)
+For VPS/Remote MongoDB server initial setup, create a root admin user with full permissions:pensource.org/licenses/MIT)
 
 A powerful and user-friendly CLI tool for managing MongoDB databases, users, collections, and data import/export operations with beautiful colorful output and comprehensive features.
 
 ## ✨ Features
 
 - 🎨 **Colorful CLI interface** for better user experience
-- 🗄️ **Database management** (create, list, delete)
+- 🗄️ **Database management** (create, list, delete, check existence)
 - 👥 **User management** with role-based access control
 - 📦 **Collection operations** (list, delete)
 - 💾 **Data import/export** with advanced options
 - 🔐 **Flexible authentication** support
-- 🌐 **Local and remote** MongoDB instances
-- ⚙️ **Environment configuration** support
+- 🌐 **Local, VPS and Atlas** MongoDB instances
+- ⚙️ **Environment configuration** support (.env files)
+- 🔧 **Connection testing** and validation utilities
+- 🛡️ **Special character password** support with quotes
+- 🚀 **Global CLI commands** (mongocli, mongolite, mongolite-cli)
+- 📋 **Multiple role assignment** for users
+- 🔄 **Database switching** and connection management
+- 📊 **Comprehensive role system** (13+ predefined roles)
+- 🎯 **One-command setup** for quick database initialization
+- 🔍 **User authentication testing**
+- 📁 **Batch operations** for multiple databases
+- 🌍 **Cross-platform compatibility** (Windows, macOS, Linux)
 
 ## 📦 Installation
 
