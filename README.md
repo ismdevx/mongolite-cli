@@ -45,12 +45,24 @@ cp .env.example .env
 ```
 
 Edit `.env` with your MongoDB connection details:
+
+**For MongoDB Atlas (Cloud):**
+```env
+MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/?retryWrites=true&w=majority&appName=YourApp
+```
+
+**For Local/VPS MongoDB:**
 ```env
 DB_HOST=localhost
 DB_PORT=27017
 ADMIN_USERNAME=admin
 ADMIN_PASSWORD=your_password
 AUTH_DB=admin
+```
+
+**⚠️ Important:** If your password contains special characters (`#`, `!`, `@`, `%`, etc.), wrap it in quotes:
+```env
+ADMIN_PASSWORD="myP@ssw0rd#with!special%chars"
 ```
 
 ### 2. Create a Database
@@ -144,16 +156,38 @@ mongocli --help
 
 ## 🔧 Configuration
 
+### Connection Methods
+
+**Method 1: MongoDB URI (Recommended for Atlas)**
+```env
+MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/?retryWrites=true&w=majority&appName=YourApp
+```
+
+**Method 2: Individual Environment Variables (Local/VPS)**
+```env
+DB_HOST=localhost
+DB_PORT=27017
+ADMIN_USERNAME=admin
+ADMIN_PASSWORD=your_password
+AUTH_DB=admin
+```
+
 ### Environment Variables
 All environment variables are optional with sensible defaults:
 
 | Variable | Default | Description |
 |----------|---------|-------------|
+| `MONGODB_URI` | - | Complete MongoDB connection string (Atlas/URI format) |
 | `DB_HOST` | `localhost` | MongoDB server hostname |
 | `DB_PORT` | `27017` | MongoDB server port |
 | `ADMIN_USERNAME` | - | Admin username (if auth enabled) |
 | `ADMIN_PASSWORD` | - | Admin password (if auth enabled) |
 | `AUTH_DB` | `admin` | Authentication database |
+
+**⚠️ Password Special Characters:** If your password contains special characters (`#`, `!`, `@`, `%`, etc.), wrap it in quotes:
+```env
+ADMIN_PASSWORD="myP@ssw0rd#with!special%chars"
+```
 
 ### MongoDB Roles
 You can specify user roles using standard MongoDB role names:

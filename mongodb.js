@@ -66,6 +66,13 @@ function usage() {
 }
 
 function getAdminUri() {
+	// If MONGODB_URI is provided, use it directly (for Atlas)
+	const mongoUri = process.env.MONGODB_URI;
+	if (mongoUri) {
+		return mongoUri;
+	}
+
+	// Fallback to building URI from individual components
 	const host = process.env.DB_HOST || "localhost";
 	const port = process.env.DB_PORT || "27017";
 	const adminUser = process.env.ADMIN_USERNAME;
@@ -73,12 +80,27 @@ function getAdminUri() {
 	const authSource = process.env.AUTH_DB || "admin";
 
 	if (adminUser && adminPass) {
-		return `mongodb://${encodeURIComponent(adminUser)}:${encodeURIComponent(
-			adminPass
-		)}@${host}:${port}/?authSource=${encodeURIComponent(authSource)}`;
+		// Check if this is a MongoDB Atlas connection
+		const isAtlas = host.includes('mongodb.net');
+		
+		if (isAtlas) {
+			// Atlas format with SSL and additional parameters
+			return `mongodb+srv://${encodeURIComponent(adminUser)}:${encodeURIComponent(
+				adminPass
+			)}@${host}/?retryWrites=true&w=majority&appName=Cluster0&authSource=${encodeURIComponent(authSource)}`;
+		} else {
+			// Standard MongoDB connection - use /authSource format
+			return `mongodb://${encodeURIComponent(adminUser)}:${encodeURIComponent(
+				adminPass
+			)}@${host}:${port}/${encodeURIComponent(authSource)}`;
+		}
 	}
 
 	// No credentials provided; connect without auth (e.g., local dev without security).
+	const isAtlas = host.includes('mongodb.net');
+	if (isAtlas) {
+		return `mongodb+srv://${host}/?retryWrites=true&w=majority&appName=Cluster0`;
+	}
 	return `mongodb://${host}:${port}/`;
 }
 
