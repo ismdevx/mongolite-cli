@@ -54,7 +54,7 @@ function usage() {
 			colors.white("  mongocli ") + colors.blue("--help"),
 			"",
 			colors.green.bold("Utilities:"),
-			colors.white("  mongocli ") + colors.blue("connection") + colors.gray(" <dbName> [--host <ip>] [--port <port>]"),
+			colors.white("  mongocli ") + colors.blue("connection") + colors.gray(" <dbName> [--host <ip>] [--port <port>] [--user <username>]"),
 			"",
 			colors.yellow.bold("Environment Variables (optional):"),
 			colors.cyan("  DB_HOST") + colors.gray(" (default: localhost)"),
@@ -301,7 +301,7 @@ async function main() {
 				const [dbName, ...rest] = args;
 				if (!dbName) throw new Error("dbName is required");
 				
-				// Parse only --host and --port flags
+				// Parse --host, --port, and --user flags
 				const flags = {};
 				for (let i = 0; i < rest.length; i++) {
 					const arg = rest[i];
@@ -311,28 +311,33 @@ async function main() {
 					} else if (arg === "--port" && rest[i + 1]) {
 						flags.port = rest[i + 1];
 						i++;
+					} else if (arg === "--user" && rest[i + 1]) {
+						flags.user = rest[i + 1];
+						i++;
 					}
 				}
 				
-				// Auto-detect a DB user
-				let user = null;
-				try {
-					const users = await withClient(async (client) => {
-						const cmdRes = await client.db(dbName).command({ usersInfo: 1 });
-						return (cmdRes && cmdRes.users) || [];
-					});
-					
-					// Prefer dbOwner, then readWrite, then first
-					const score = (u) => {
-						const roles = (u.roles || []).map((r) => r.role || "");
-						if (roles.includes("dbOwner")) return 3;
-						if (roles.includes("readWrite")) return 2;
-						return 1;
-					};
-					users.sort((a, b) => score(b) - score(a));
-					if (users.length) user = users[0].user;
-				} catch (_) {
-					// Ignore errors and fall back to default behavior
+				// Use provided user or auto-detect a DB user
+				let user = flags.user;
+				if (!user) {
+					try {
+						const users = await withClient(async (client) => {
+							const cmdRes = await client.db(dbName).command({ usersInfo: 1 });
+							return (cmdRes && cmdRes.users) || [];
+						});
+						
+						// Prefer dbOwner, then readWrite, then first
+						const score = (u) => {
+							const roles = (u.roles || []).map((r) => r.role || "");
+							if (roles.includes("dbOwner")) return 3;
+							if (roles.includes("readWrite")) return 2;
+							return 1;
+						};
+						users.sort((a, b) => score(b) - score(a));
+						if (users.length) user = users[0].user;
+					} catch (_) {
+						// Ignore errors and fall back to default behavior
+					}
 				}
 				
 				const uri = buildConnectionUri({
